@@ -1,8 +1,9 @@
 package com.dk.cp.common;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
+
+import com.dk.cp.common.MarkedVocabulary.TokenNode;
 
 public class Tokenizer {
 	private Vocabulary v;
@@ -23,15 +24,19 @@ public class Tokenizer {
 		return processed;
 	}
 
-	private List<String> process(String raw, int pos, Vocabulary v) {
+	private int getEndPos(String raw, int pos, Vocabulary v) {
 		if (raw != null && raw.length() > 0 && pos < raw.length()) {
 			String s = raw.substring(pos, pos + 1);
-			if(v.keySet().contains(s)) {
-				process(raw, pos+1, v.get(s));
+			TokenNode stopNode = new TokenNode(s, true);
+			TokenNode nonStopNode = new TokenNode(s, false);
+			if (v.containsKey(stopNode)) {
+				getEndPos(raw, pos + 1, v.get(stopNode));
+			} else if (v.containsKey(nonStopNode)) {
+				getEndPos(raw, pos + 1, v.get(nonStopNode));
 			} else {
-				
+				return pos;
 			}
 		}
-		return null;
+		return 0;
 	}
 }

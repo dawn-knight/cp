@@ -2,9 +2,9 @@ package com.dk.cp.common;
 
 import java.util.HashMap;
 
-import com.dk.cp.common.MarkedVocabulary.Token;
+import com.dk.cp.common.MarkedVocabulary.TokenNode;
 
-public class MarkedVocabulary extends HashMap<Token, MarkedVocabulary> {
+public class MarkedVocabulary extends HashMap<TokenNode, MarkedVocabulary> {
 
 	private static final long serialVersionUID = -3342988870845409143L;
 
@@ -15,8 +15,8 @@ public class MarkedVocabulary extends HashMap<Token, MarkedVocabulary> {
 	private void expand(String word, int startPos) {
 		if (word.length() > 1) {
 			boolean putStraightly = true;
-			Token tokenNeedMark = null;
-			for (Token key : keySet()) {
+			TokenNode tokenNeedMark = null;
+			for (TokenNode key : keySet()) {
 				if (word.substring(startPos, startPos + 1).equals(
 						key.getPayload())) {
 					putStraightly = false;
@@ -34,7 +34,7 @@ public class MarkedVocabulary extends HashMap<Token, MarkedVocabulary> {
 				if (startPos + 1 < word.length()) {
 					subMv.expand(word, startPos + 1);
 				}
-				Token token = new Token(word.substring(startPos, startPos + 1));
+				TokenNode token = new TokenNode(word.substring(startPos, startPos + 1));
 				if (startPos + 1 < word.length()) {
 					token.setCanStopHere(false);
 				} else {
@@ -51,15 +51,15 @@ public class MarkedVocabulary extends HashMap<Token, MarkedVocabulary> {
 		}
 	}
 
-	static class Token {
+	static class TokenNode {
 		private String payload;
 		private boolean canStopHere;
 
-		public Token(String payload) {
+		public TokenNode(String payload) {
 			this.payload = payload;
 		}
 
-		public Token(String payload, boolean canStopHere) {
+		public TokenNode(String payload, boolean canStopHere) {
 			this.payload = payload;
 			this.canStopHere = canStopHere;
 		}
@@ -96,9 +96,9 @@ public class MarkedVocabulary extends HashMap<Token, MarkedVocabulary> {
 				return true;
 			if (obj == null)
 				return false;
-			if (!(obj instanceof Token))
+			if (!(obj instanceof TokenNode))
 				return false;
-			Token other = (Token) obj;
+			TokenNode other = (TokenNode) obj;
 			if (canStopHere != other.canStopHere)
 				return false;
 			if (payload == null) {
