@@ -1,5 +1,6 @@
 package com.dk.cp.common;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -15,13 +16,22 @@ public class Tokenizer {
 	}
 
 	public List<String> process(String raw) {
+		List<String> processed = new ArrayList<String>();
 		if (raw != null && raw.length() > 0) {
-			for (int i = 0; i < raw.length(); i++) {
-				if (v.containsKey(raw.substring(i, i + 1))) {
-					
-				}
+
+		}
+		return processed;
+	}
+
+	private List<String> process(String raw, int pos, Vocabulary v) {
+		if (raw != null && raw.length() > 0 && pos < raw.length()) {
+			String s = raw.substring(pos, pos + 1);
+			if(v.keySet().contains(s)) {
+				process(raw, pos+1, v.get(s));
+			} else {
+				
 			}
 		}
-		return Arrays.asList(raw);
+		return null;
 	}
 }
