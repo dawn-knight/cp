@@ -2,6 +2,9 @@ package com.dk.cp.common;
 
 import static org.junit.Assert.*;
 
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.List;
 
 import org.junit.BeforeClass;
@@ -62,6 +65,19 @@ public class TokenizerTest {
 		List<String> processed = t.process("美国的全称是美利坚合众国");
 		System.out.println(processed);
 		assertEquals(5, processed.size());
+	}
+	
+	@Test
+	public void printAllUtf16Char() throws IOException {
+		File f = new File("utf16.txt");
+		if(f.exists())
+			f.delete();
+		f.createNewFile();
+		FileWriter fw = new FileWriter(f);
+		for (int i = 0; i < 65536; i++) {
+			fw.append((char)i);
+			fw.append('\n');
+		}
 	}
 
 }
