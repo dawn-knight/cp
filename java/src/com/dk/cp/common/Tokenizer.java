@@ -19,22 +19,43 @@ public class Tokenizer {
 	public List<String> process(String raw) {
 		List<String> processed = new ArrayList<String>();
 		if (raw != null && raw.length() > 0) {
+			StringBuffer sb4AlphanumericCode = null;
 			for (int i = 0; i < raw.length();) {
-				List<Integer> endPosL = getEndPosL(raw, i, mv);
-				if (endPosL != null) {
-					int nextStartPos = i + 1;
-					for (Integer endPos : endPosL) {
-						processed.add(raw.substring(i, endPos));
-						nextStartPos = endPos;
+				if (Character.isLetterOrDigit(raw.codePointAt(i))) {
+					if (Character.isIdeographic(raw.codePointAt(i))) {
+						unloadSb(sb4AlphanumericCode, processed);
+						List<Integer> endPosL = getEndPosL(raw, i, mv);
+						if (endPosL != null) {
+							int nextStartPos = i + 1;
+							for (Integer endPos : endPosL) {
+								processed.add(raw.substring(i, endPos));
+								nextStartPos = endPos;
+							}
+							i = nextStartPos;
+						} else {
+							processed.add(raw.substring(i, i + 1));
+							i++;
+						}
+					} else {
+						if (sb4AlphanumericCode == null)
+							sb4AlphanumericCode = new StringBuffer();
+						sb4AlphanumericCode.append(raw.charAt(i));
+						i++;
 					}
-					i = nextStartPos;
 				} else {
-					processed.add(raw.substring(i, i + 1));
+					unloadSb(sb4AlphanumericCode, processed);
 					i++;
 				}
 			}
 		}
 		return processed;
+	}
+	
+	private void unloadSb(StringBuffer sb, List<String> processed) {
+		if (sb != null && sb.length() > 0) {
+			processed.add(sb.toString());
+			sb.delete(0, sb.length());
+		}
 	}
 
 	private List<Integer> getEndPosL(String raw, int pos, MarkedVocabulary mv) {

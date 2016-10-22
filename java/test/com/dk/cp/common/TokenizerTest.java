@@ -68,6 +68,24 @@ public class TokenizerTest {
 	}
 	
 	@Test
+	public void testWithPunctuationAndSpace() {
+		Tokenizer t = new Tokenizer();
+		t.setMv(mv);
+		List<String> processed = t.process("我，费晔晖 是中国最有潜力的科技创新企业的领导者！！！!!! ");
+		System.out.println(processed);
+		assertEquals(14, processed.size());
+	}
+	
+	@Test
+	public void testWithHanEnglishPunctuationAndSpace() {
+		Tokenizer t = new Tokenizer();
+		t.setMv(mv);
+		List<String> processed = t.process("我，费晔晖，Leonard Fei, 是中国最有潜力的科技创新企业——DK Leading Technolodgy的领导者！！！!!! ");
+		System.out.println(processed);
+		assertEquals(19, processed.size());
+	}
+	
+//	@Test
 	public void printAllUtf16Char() throws IOException {
 		File f = new File("utf16.txt");
 		if(f.exists())
@@ -77,6 +95,17 @@ public class TokenizerTest {
 		for (int i = 0; i < 65536; i++) {
 			fw.append((char)i);
 			fw.append('\n');
+		}
+	}
+	
+//	@Test
+	public void printCharProperties() {
+		String s = "我，我是Leonard Fei!";
+		for(char c :s.toCharArray()) {
+			System.out.println(c);
+			System.out.println(Character.isIdeographic(c));
+			System.out.println(Character.isLetterOrDigit(c));
+			System.out.println();
 		}
 	}
 
